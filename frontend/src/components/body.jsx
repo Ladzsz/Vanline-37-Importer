@@ -24,8 +24,8 @@ export default function ImporterBody({ onSubmit }) {
     //fill this in with link to backend 
     try {
       // Make POST request to backend
-       const response = await axios.post(
-        "http://localhost:5000/api/import",
+       const response = await axios.post(        
+        "https://vanline-37-importer.onrender.com/api/import", //for local usage use the link here instead ("http://localhost:5000/api/import")
         { text },
         { responseType: "blob" } // Important: we expect a file back
     );

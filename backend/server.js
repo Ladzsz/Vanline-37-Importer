@@ -45,7 +45,6 @@ app.post("/api/import", (req, res) => {
       const [trackID, cause] = value.split("|").map(s => s.trim());
       if (trackID) {
         dataMap[rowType].trackRows.push({ trackID, cause: cause || "" });
-        stationTotal++;
       }
     }
   });
@@ -92,6 +91,31 @@ app.post("/api/import", (req, res) => {
   // Create workbook
   const workbook = XLSX.utils.book_new();
   const worksheet = XLSX.utils.json_to_sheet(rows);
+
+  // Calculate max length for each column
+  const colWidths = rows[0] 
+    ? Object.keys(rows[0]).map(key => {
+        return {
+          wch: Math.max(
+            key.length,
+            ...rows.map(row => (row[key] ? row[key].toString().length : 0))
+          )
+        };
+      })
+    : [];
+
+  // Apply column widths
+  worksheet['!cols'] = colWidths;
+
+  // Align numbers to left
+  Object.keys(worksheet).forEach(cell => {
+  if (worksheet[cell].t === 'n') { // numeric cell type
+    // Formatting the number as a text item so it can left align.
+    worksheet[cell].z = '@'; 
+    worksheet[cell].s = { alignment: { horizontal: "left" } };
+  }
+});
+
   XLSX.utils.book_append_sheet(workbook, worksheet, "Data");
 
   // Convert workbook to buffer

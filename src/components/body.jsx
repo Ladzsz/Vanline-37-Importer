@@ -24,11 +24,11 @@ export default function ImporterBody({ onSubmit }) {
     //fill this in with link to backend 
     try {
       // Make POST request to backend
-    //   const response = await axios.post(
-    //     ,
-    //     { text },
-    //     { responseType: "blob" } // Important: we expect a file back
-    //   );
+       const response = await axios.post(
+        "http://localhost:5000/api/import",
+        { text },
+        { responseType: "blob" } // Important: we expect a file back
+    );
 
       // Save Excel file
       const blob = new Blob([response.data], {
